@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hira Card — Digital Hisab Book for Diamond Karigar</title>
+  <meta name="description" content="Hira Card is the simplest earnings & expense tracker built for diamond polishing workers (karigar). Track your hisab, upad, and kharch — no paper, no calculator." />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #0e7c66;
+      --dark:    #084e40;
+      --gold:    #d4a017;
+    }
+
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+    /* ── Language switcher ── */
+    .lang-switch {
+      position: fixed; top: 14px; right: 14px; z-index: 1000;
+      display: flex; gap: 4px;
+      background: rgba(255,255,255,.15);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 50px; padding: 4px;
+    }
+    .lang-switch button {
+      border: none; background: transparent; color: #fff;
+      font-size: .85rem; font-weight: 600;
+      padding: 5px 12px; border-radius: 50px; cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+    .lang-switch button.active {
+      background: #fff; color: var(--primary);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+      color: #fff;
+      padding: 80px 24px 60px;
+      text-align: center;
+    }
+    .hero .app-icon {
+      width: 110px; height: 110px;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+      margin-bottom: 24px;
+    }
+    .hero h1 { font-size: 2.4rem; font-weight: 800; }
+    .hero p.tagline {
+      font-size: 1.15rem; opacity: .92; margin-top: 10px; margin-bottom: 32px;
+    }
+
+    /* Download button */
+    .btn-download {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: #fff; color: var(--primary);
+      font-weight: 700; font-size: 1.1rem;
+      padding: 14px 32px; border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+      color: var(--dark);
+    }
+    .btn-download i { font-size: 1.5rem; }
+
+    .badge-play { height: 58px; margin-top: 16px; display: block; margin-inline: auto; }
+
+    /* ── Language pills ── */
+    .lang-pills { margin-top: 22px; }
+    .lang-pill {
+      display: inline-block; background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.35);
+      color: #fff; font-size: .9rem; font-weight: 600;
+      padding: 6px 16px; border-radius: 50px; margin: 4px;
+    }
+
+    /* ── Section titles ── */
+    .section-title {
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--primary); margin-bottom: 8px;
+    }
+    .section-sub { color: #666; margin-bottom: 32px; }
+
+    /* ── Feature cards ── */
+    .feature-card {
+      background: #fff; border-radius: 16px;
+      padding: 28px 20px; text-align: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      height: 100%;
+      transition: transform .15s;
+    }
+    .feature-card:hover { transform: translateY(-4px); }
+    .feature-card .icon {
+      font-size: 2.6rem; color: var(--primary);
+      margin-bottom: 14px; display: block;
+    }
+    .feature-card h5 { font-weight: 700; margin-bottom: 8px; }
+    .feature-card p  { font-size: .9rem; color: #555; line-height: 1.6; }
+
+    /* ── Highlight strip ── */
+    .highlight-strip {
+      background: linear-gradient(135deg, #e6f5f1, #fff);
+      border-left: 5px solid var(--gold);
+      border-radius: 12px; padding: 24px 28px;
+    }
+    .highlight-strip h4 { font-weight: 700; color: var(--dark); }
+    .highlight-strip p  { color: #444; margin-bottom: 0; }
+
+    /* ── Steps ── */
+    .step-num {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--primary); color: #fff;
+      font-weight: 700; font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── What's new ── */
+    .whatsnew {
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      padding: 28px 32px;
+    }
+    .whatsnew .ver-badge {
+      display: inline-block; background: var(--primary); color: #fff;
+      font-weight: 700; font-size: .85rem;
+      padding: 4px 14px; border-radius: 50px; margin-bottom: 16px;
+    }
+    .whatsnew ul { list-style: none; padding-left: 0; margin-bottom: 0; }
+    .whatsnew li {
+      padding: 8px 0 8px 30px; position: relative;
+      color: #444; border-bottom: 1px solid #f0f0f0;
+    }
+    .whatsnew li:last-child { border-bottom: none; }
+    .whatsnew li::before {
+      content: "\F26B"; font-family: "bootstrap-icons";
+      position: absolute; left: 0; color: var(--gold);
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: #1e1e2e; color: #aaa;
+      padding: 40px 24px; text-align: center;
+    }
+    footer a { color: #6fd6bf; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<!-- ══ LANGUAGE SWITCHER ════════════════════════════════════════════════════ -->
+<div class="lang-switch" id="langSwitch">
+  <button data-lang="en">EN</button>
+  <button data-lang="hi">हिंदी</button>
+  <button data-lang="gu">ગુજ</button>
+</div>
+
+<!-- ══ HERO ══════════════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <img class="app-icon" src="https://play-lh.googleusercontent.com/EvuY5mRXPXtUrTtqZ1pCBqQlQyIuKbcvlo0oVxv4dLXawzb8bsnL2BMK70qzcIhG81miXCgSlonmwkaoeMFnjKA=w480-h960-rw" alt="Hira Card" />
+  <h1>Hira Card</h1>
+  <p class="tagline" data-i18n="tagline">Digital hisab book for diamond polishing karigar — track earnings &amp; expenses.</p>
+
+  <a class="btn-download"
+     href="https://play.google.com/store/apps/details?id=com.hiracard"
+     target="_blank">
+    <i class="bi bi-google-play"></i>
+    <span data-i18n="btn_download">Download Free on Google Play</span>
+  </a>
+
+  <div class="mt-3" style="opacity:.85; font-size:.9rem;" data-i18n="free_android">
+    ✅ Free to download &nbsp;·&nbsp; 📱 Android
+  </div>
+
+  <div class="lang-pills">
+    <span class="lang-pill">ગુજરાતી</span>
+    <span class="lang-pill">हिंदी</span>
+    <span class="lang-pill">English</span>
+  </div>
+</section>
+
+<!-- ══ WHAT IS A HIRA CARD ══════════════════════════════════════════════════ -->
+<section class="py-5">
+  <div class="container" style="max-width:760px;">
+    <div class="text-center">
+      <div class="section-title" data-i18n="whatis_title">What is a Hira Card?</div>
+    </div>
+    <p class="text-muted text-center" style="line-height:1.9; font-size:1.05rem;" data-i18n="whatis_body">
+      A Hira Card is your <strong>digital hisab</strong> — it tracks everything from when you start
+      work to when you settle with your munim or contractor. Whether you polish
+      <strong>પેલ, તળિયા,</strong> or <strong>માથાળા</strong>, just add your work and Hira Card
+      calculates everything automatically. No paper needed. No calculator needed.
+    </p>
+  </div>
+</section>
+
+<!-- ══ DOWNLOAD INSTRUCTIONS ════════════════════════════════════════════════ -->
+<section class="py-5 bg-light">
+  <div class="container" style="max-width:700px;">
+    <div class="text-center mb-4">
+      <div class="section-title" data-i18n="howto_title">How to Download</div>
+      <p class="section-sub" data-i18n="howto_sub">Install Hira Card on your Android phone in 3 easy steps</p>
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+      <div class="d-flex align-items-start gap-3 bg-white rounded-4 p-3 shadow-sm">
+        <div class="step-num">1</div>
+        <div>
+          <strong data-i18n="step1_t">Tap the button below</strong>
+          <p class="mb-0 text-muted" style="font-size:.9rem;" data-i18n="step1_d">Click "Download Free on Google Play" above or the badge below — it will open the Play Store.</p>
+        </div>
+      </div>
+      <div class="d-flex align-items-start gap-3 bg-white rounded-4 p-3 shadow-sm">
+        <div class="step-num">2</div>
+        <div>
+          <strong data-i18n="step2_t">Tap "Install" on Google Play</strong>
+          <p class="mb-0 text-muted" style="font-size:.9rem;" data-i18n="step2_d">The app is free. Just tap Install and wait for it to download.</p>
+        </div>
+      </div>
+      <div class="d-flex align-items-start gap-3 bg-white rounded-4 p-3 shadow-sm">
+        <div class="step-num">3</div>
+        <div>
+          <strong data-i18n="step3_t">Open Hira Card &amp; start your hisab!</strong>
+          <p class="mb-0 text-muted" style="font-size:.9rem;" data-i18n="step3_d">Pick your language, add your first card, and start tracking your daily earnings.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="https://play.google.com/store/apps/details?id=com.hiracard" target="_blank">
+        <img class="badge-play"
+          src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+          alt="Get it on Google Play" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FEATURES ══════════════════════════════════════════════════════════════ -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="section-title" data-i18n="features_title">Key Features</div>
+      <p class="section-sub" data-i18n="features_sub">Everything a karigar needs to manage daily hisab</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-6 col-md-4">
+        <div class="feature-card">
+          <i class="bi bi-cash-coin icon"></i>
+          <h5 data-i18n="f1_t">Daily Earnings</h5>
+          <p data-i18n="f1_d">Add polish entries by category with quantity. The app calculates your total automatically.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="feature-card">
+          <i class="bi bi-wallet2 icon"></i>
+          <h5 data-i18n="f2_t">Upad (Advance) Tracking</h5>
+          <p data-i18n="f2_d">Record advances taken during the card period. See your real balance after deductions.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="feature-card">
+          <i class="bi bi-receipt icon"></i>
+          <h5 data-i18n="f3_t">Kharch (Expenses)</h5>
+          <p data-i18n="f3_d">Track daily expenses by category — ચા, પાણી, નાસ્તો, જમવાનું and more.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="feature-card">
+          <i class="bi bi-clock-history icon"></i>
+          <h5 data-i18n="f4_t">Card History</h5>
+          <p data-i18n="f4_d">Every closed card is saved. Review your past earnings anytime.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="feature-card">
+          <i class="bi bi-whatsapp icon"></i>
+          <h5 data-i18n="f5_t">Share on WhatsApp</h5>
+          <p data-i18n="f5_d">Share your full card as a PDF to your munim or family in one tap.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="feature-card">
+          <i class="bi bi-bar-chart-line icon"></i>
+          <h5 data-i18n="f6_t">Monthly Analytics</h5>
+          <p data-i18n="f6_d">See your income and expense charts for the last 6 months.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="feature-card">
+          <i class="bi bi-tags icon"></i>
+          <h5 data-i18n="f7_t">Your Categories</h5>
+          <p data-i18n="f7_d">Add your own polishing categories with custom rates per piece.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="feature-card">
+          <i class="bi bi-translate icon"></i>
+          <h5 data-i18n="f8_t">3 Languages</h5>
+          <p data-i18n="f8_d">Use Hira Card in ગુજરાતી, हिंदी, or English — whatever you're comfortable with.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="feature-card">
+          <i class="bi bi-shield-lock icon"></i>
+          <h5 data-i18n="f9_t">Privacy First</h5>
+          <p data-i18n="f9_d">All your data is stored only on your phone. Nothing is uploaded to any server.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ AD-FREE HIGHLIGHT ════════════════════════════════════════════════════ -->
+<section class="py-4 bg-light">
+  <div class="container" style="max-width:720px;">
+    <div class="highlight-strip">
+      <h4><i class="bi bi-gift-fill me-2" style="color:var(--gold)"></i><span data-i18n="adfree_title">Go Ad-Free Today — Free</span></h4>
+      <p class="mt-2" data-i18n="adfree_body">Watch one short video and enjoy Hira Card <strong>completely ad-free for the rest of the day</strong> — completely free, no payment needed!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WHO IT'S FOR ════════════════════════════════════════════════════════ -->
+<section class="py-5">
+  <div class="container" style="max-width:760px;">
+    <div class="text-center mb-4">
+      <div class="section-title" data-i18n="worksfor_title">Works For</div>
+      <p class="section-sub" data-i18n="worksfor_sub">Built for everyone in the diamond polishing trade</p>
+    </div>
+    <div class="row g-3 text-center">
+      <div class="col-md-4">
+        <div class="bg-white rounded-4 p-4 shadow-sm h-100">
+          <i class="bi bi-gem" style="font-size:2rem; color:var(--primary)"></i>
+          <p class="mt-2 mb-0 fw-semibold" data-i18n="wf1">Diamond polishing workers (karigar)</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="bg-white rounded-4 p-4 shadow-sm h-100">
+          <i class="bi bi-person-badge" style="font-size:2rem; color:var(--primary)"></i>
+          <p class="mt-2 mb-0 fw-semibold" data-i18n="wf2">Munim / contractors who manage karigar</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="bg-white rounded-4 p-4 shadow-sm h-100">
+          <i class="bi bi-journal-check" style="font-size:2rem; color:var(--primary)"></i>
+          <p class="mt-2 mb-0 fw-semibold" data-i18n="wf3">Anyone wanting a simple card-based earnings tracker</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WHAT'S NEW ════════════════════════════════════════════════════════════ -->
+<section class="py-5 bg-light">
+  <div class="container" style="max-width:700px;">
+    <div class="text-center mb-4">
+      <div class="section-title" data-i18n="whatsnew_title">What's New</div>
+      <p class="section-sub" data-i18n="whatsnew_sub">Latest improvements in the newest build</p>
+    </div>
+    <div class="whatsnew">
+      <span class="ver-badge">Hira Card — v1.0.6</span>
+      <ul>
+        <li data-i18n="wn1">Fixed hamburger menu not opening on tap</li>
+        <li data-i18n="wn2">Fixed bottom menu icons not showing on first app open</li>
+        <li data-i18n="wn3">Gift &amp; Play button now shows loading screen and auto-retries until rewarded ad is ready</li>
+        <li data-i18n="wn4">Updated card share button label</li>
+        <li data-i18n="wn5">Added uninstall data-loss warning in Settings</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ABOUT ═══════════════════════════════════════════════════════════════ -->
+<section class="py-5">
+  <div class="container" style="max-width:700px;">
+    <div class="section-title text-center" data-i18n="about_title">About</div>
+    <p class="section-sub text-center" data-i18n="about_sub">Made with love by MonajiInfoTech</p>
+    <div class="bg-white rounded-4 p-4 shadow-sm text-muted" style="line-height:1.8;" data-i18n="about_body">
+      Hira Card is developed by <strong>MonajiInfoTech</strong>. Our goal is to give every diamond
+      polishing karigar a simple, reliable way to keep their daily hisab — earnings, upad, and kharch —
+      right in their pocket. No paper, no calculator, no confusion at settlement time.
+      Download Hira Card — the digital hisab book for every karigar.
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ════════════════════════════════════════════════════════════════ -->
+<footer>
+  <p style="font-size:1.1rem; font-weight:600; color:#fff; margin-bottom:12px;">Hira Card</p>
+  <p>
+    <a href="mailto:monajiinfotech@gmail.com"><i class="bi bi-envelope"></i> monajiinfotech@gmail.com</a>
+  </p>
+  <p class="mt-2">
+    <a href="https://monajiinfotech.github.io//hiracard-privacy/privacy-policy.html" target="_blank" data-i18n="footer_privacy">Privacy Policy</a>
+    &nbsp;|&nbsp;
+    <a href="https://play.google.com/store/apps/details?id=com.hiracard" target="_blank">Google Play</a>
+  </p>
+  <p class="mt-3" style="font-size:.8rem;">&copy; 2025 MonajiInfoTech. All rights reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const translations = {
+    en: {
+      tagline: "Digital hisab book for diamond polishing karigar — track earnings &amp; expenses.",
+      btn_download: "Download Free on Google Play",
+      free_android: "✅ Free to download &nbsp;·&nbsp; 📱 Android",
+      whatis_title: "What is a Hira Card?",
+      whatis_body: "A Hira Card is your <strong>digital hisab</strong> — it tracks everything from when you start work to when you settle with your munim or contractor. Whether you polish <strong>પેલ, તળિયા,</strong> or <strong>માથાળા</strong>, just add your work and Hira Card calculates everything automatically. No paper needed. No calculator needed.",
+      howto_title: "How to Download",
+      howto_sub: "Install Hira Card on your Android phone in 3 easy steps",
+      step1_t: "Tap the button below",
+      step1_d: "Click \"Download Free on Google Play\" above or the badge below — it will open the Play Store.",
+      step2_t: "Tap \"Install\" on Google Play",
+      step2_d: "The app is free. Just tap Install and wait for it to download.",
+      step3_t: "Open Hira Card &amp; start your hisab!",
+      step3_d: "Pick your language, add your first card, and start tracking your daily earnings.",
+      features_title: "Key Features",
+      features_sub: "Everything a karigar needs to manage daily hisab",
+      f1_t: "Daily Earnings", f1_d: "Add polish entries by category with quantity. The app calculates your total automatically.",
+      f2_t: "Upad (Advance) Tracking", f2_d: "Record advances taken during the card period. See your real balance after deductions.",
+      f3_t: "Kharch (Expenses)", f3_d: "Track daily expenses by category — ચા, પાણી, નાસ્તો, જમવાનું and more.",
+      f4_t: "Card History", f4_d: "Every closed card is saved. Review your past earnings anytime.",
+      f5_t: "Share on WhatsApp", f5_d: "Share your full card as a PDF to your munim or family in one tap.",
+      f6_t: "Monthly Analytics", f6_d: "See your income and expense charts for the last 6 months.",
+      f7_t: "Your Categories", f7_d: "Add your own polishing categories with custom rates per piece.",
+      f8_t: "3 Languages", f8_d: "Use Hira Card in ગુજરાતી, हिंदी, or English — whatever you're comfortable with.",
+      f9_t: "Privacy First", f9_d: "All your data is stored only on your phone. Nothing is uploaded to any server.",
+      adfree_title: "Go Ad-Free Today — Free",
+      adfree_body: "Watch one short video and enjoy Hira Card <strong>completely ad-free for the rest of the day</strong> — completely free, no payment needed!",
+      worksfor_title: "Works For",
+      worksfor_sub: "Built for everyone in the diamond polishing trade",
+      wf1: "Diamond polishing workers (karigar)",
+      wf2: "Munim / contractors who manage karigar",
+      wf3: "Anyone wanting a simple card-based earnings tracker",
+      whatsnew_title: "What's New",
+      whatsnew_sub: "Latest improvements in the newest build",
+      wn1: "Fixed hamburger menu not opening on tap",
+      wn2: "Fixed bottom menu icons not showing on first app open",
+      wn3: "Gift &amp; Play button now shows loading screen and auto-retries until rewarded ad is ready",
+      wn4: "Updated card share button label",
+      wn5: "Added uninstall data-loss warning in Settings",
+      about_title: "About",
+      about_sub: "Made with love by MonajiInfoTech",
+      about_body: "Hira Card is developed by <strong>MonajiInfoTech</strong>. Our goal is to give every diamond polishing karigar a simple, reliable way to keep their daily hisab — earnings, upad, and kharch — right in their pocket. No paper, no calculator, no confusion at settlement time. Download Hira Card — the digital hisab book for every karigar.",
+      footer_privacy: "Privacy Policy"
+    },
+    hi: {
+      tagline: "हीरा घिसने वाले कारीगरों के लिए डिजिटल हिसाब बुक — कमाई और खर्च ट्रैक करें।",
+      btn_download: "Google Play पर मुफ़्त डाउनलोड करें",
+      free_android: "✅ मुफ़्त डाउनलोड &nbsp;·&nbsp; 📱 Android",
+      whatis_title: "हीरा कार्ड क्या है?",
+      whatis_body: "हीरा कार्ड आपका <strong>डिजिटल हिसाब</strong> है — यह काम शुरू करने से लेकर मुनीम या ठेकेदार के साथ हिसाब चुकाने तक सब कुछ ट्रैक करता है। आप <strong>પેલ, તળિયા,</strong> या <strong>માથાળા</strong> कुछ भी घिसें, बस अपना काम जोड़ें और हीरा कार्ड सब कुछ अपने-आप गिन लेता है। न कागज़ चाहिए, न कैलकुलेटर।",
+      howto_title: "कैसे डाउनलोड करें",
+      howto_sub: "अपने Android फ़ोन पर 3 आसान कदमों में हीरा कार्ड इंस्टॉल करें",
+      step1_t: "नीचे दिए बटन पर टैप करें",
+      step1_d: "ऊपर दिए \"Google Play पर मुफ़्त डाउनलोड करें\" या नीचे दिए बैज पर क्लिक करें — Play Store खुल जाएगा।",
+      step2_t: "Google Play पर \"Install\" टैप करें",
+      step2_d: "ऐप मुफ़्त है। बस Install टैप करें और डाउनलोड होने का इंतज़ार करें।",
+      step3_t: "हीरा कार्ड खोलें और अपना हिसाब शुरू करें!",
+      step3_d: "अपनी भाषा चुनें, अपना पहला कार्ड जोड़ें, और रोज़ की कमाई ट्रैक करना शुरू करें।",
+      features_title: "मुख्य विशेषताएँ",
+      features_sub: "रोज़ का हिसाब संभालने के लिए कारीगर को जो चाहिए, सब कुछ",
+      f1_t: "रोज़ की कमाई", f1_d: "श्रेणी और मात्रा के हिसाब से एंट्री जोड़ें। ऐप आपका कुल योग अपने-आप गिन लेता है।",
+      f2_t: "उपाड़ (एडवांस) ट्रैकिंग", f2_d: "कार्ड अवधि में लिया गया कोई भी एडवांस दर्ज करें। कटौती के बाद असली बैलेंस देखें।",
+      f3_t: "खर्च", f3_d: "रोज़ का खर्च श्रेणी के अनुसार ट्रैक करें — चाय, पानी, नाश्ता, खाना और बहुत कुछ।",
+      f4_t: "कार्ड इतिहास", f4_d: "हर बंद किया गया कार्ड सेव रहता है। अपनी पुरानी कमाई कभी भी देखें।",
+      f5_t: "WhatsApp पर शेयर करें", f5_d: "अपना पूरा कार्ड एक टैप में PDF के रूप में मुनीम या परिवार को भेजें।",
+      f6_t: "मासिक विश्लेषण", f6_d: "पिछले 6 महीनों की कमाई और खर्च के चार्ट देखें।",
+      f7_t: "अपनी श्रेणियाँ", f7_d: "प्रति पीस अपनी दर के साथ अपनी खुद की घिसाई श्रेणियाँ जोड़ें।",
+      f8_t: "3 भाषाएँ", f8_d: "हीरा कार्ड को ગુજરાતી, हिंदी या English में इस्तेमाल करें — जो आपको आसान लगे।",
+      f9_t: "गोपनीयता सबसे पहले", f9_d: "आपका सारा डेटा सिर्फ़ आपके फ़ोन में रहता है। किसी सर्वर पर कुछ अपलोड नहीं होता।",
+      adfree_title: "आज ही विज्ञापन-मुक्त बनें — मुफ़्त",
+      adfree_body: "एक छोटा वीडियो देखें और हीरा कार्ड को <strong>पूरे दिन के लिए बिल्कुल विज्ञापन-मुक्त</strong> इस्तेमाल करें — बिल्कुल मुफ़्त, कोई भुगतान नहीं!",
+      worksfor_title: "किसके लिए है",
+      worksfor_sub: "हीरा घिसाई के काम से जुड़े हर किसी के लिए बना",
+      wf1: "हीरा घिसने वाले कारीगर",
+      wf2: "मुनीम / ठेकेदार जो कारीगरों को संभालते हैं",
+      wf3: "जिसे भी एक आसान कार्ड-आधारित कमाई ट्रैकर चाहिए",
+      whatsnew_title: "नया क्या है",
+      whatsnew_sub: "नए बिल्ड में ताज़ा सुधार",
+      wn1: "टैप करने पर हैमबर्गर मेन्यू न खुलने की समस्या ठीक की",
+      wn2: "पहली बार ऐप खोलने पर नीचे के मेन्यू आइकन न दिखने की समस्या ठीक की",
+      wn3: "Gift &amp; Play बटन अब लोडिंग स्क्रीन दिखाता है और रिवॉर्ड विज्ञापन तैयार होने तक अपने-आप दोबारा कोशिश करता है",
+      wn4: "कार्ड शेयर बटन का लेबल अपडेट किया",
+      wn5: "सेटिंग्स में अनइंस्टॉल पर डेटा खोने की चेतावनी जोड़ी",
+      about_title: "हमारे बारे में",
+      about_sub: "MonajiInfoTech द्वारा प्यार से बनाया गया",
+      about_body: "हीरा कार्ड <strong>MonajiInfoTech</strong> द्वारा विकसित किया गया है। हमारा लक्ष्य है हर हीरा घिसने वाले कारीगर को अपना रोज़ का हिसाब — कमाई, उपाड़ और खर्च — आसानी और भरोसे के साथ अपनी जेब में रखने का तरीका देना। न कागज़, न कैलकुलेटर, न हिसाब के समय कोई उलझन। हीरा कार्ड डाउनलोड करें — हर कारीगर के लिए डिजिटल हिसाब बुक।",
+      footer_privacy: "गोपनीयता नीति"
+    },
+    gu: {
+      tagline: "હીરા ઘસનાર કારીગરો માટે ડિજિટલ હિસાબ બુક — કમાણી અને ખર્ચ ટ્રૅક કરો.",
+      btn_download: "Google Play પર મફત ડાઉનલોડ કરો",
+      free_android: "✅ મફત ડાઉનલોડ &nbsp;·&nbsp; 📱 Android",
+      whatis_title: "હીરા કાર્ડ શું છે?",
+      whatis_body: "હીરા કાર્ડ એ તમારો <strong>ડિજિટલ હિસાબ</strong> છે — તે કામ શરૂ કરવાથી લઈને મુનીમ કે કોન્ટ્રાક્ટર સાથે હિસાબ ચૂકતે કરવા સુધી બધું ટ્રૅક કરે છે. તમે <strong>પેલ, તળિયા,</strong> કે <strong>માથાળા</strong> ગમે તે ઘસો, બસ તમારું કામ ઉમેરો અને હીરા કાર્ડ બધું આપમેળે ગણી લે છે. કાગળની જરૂર નહીં. કેલ્ક્યુલેટરની જરૂર નહીં.",
+      howto_title: "કેવી રીતે ડાઉનલોડ કરવું",
+      howto_sub: "તમારા Android ફોન પર 3 સરળ સ્ટેપમાં હીરા કાર્ડ ઇન્સ્ટોલ કરો",
+      step1_t: "નીચેના બટન પર ટૅપ કરો",
+      step1_d: "ઉપરના \"Google Play પર મફત ડાઉનલોડ કરો\" અથવા નીચેના બૅજ પર ક્લિક કરો — Play Store ખુલશે.",
+      step2_t: "Google Play પર \"Install\" ટૅપ કરો",
+      step2_d: "એપ મફત છે. બસ Install ટૅપ કરો અને ડાઉનલોડ થવાની રાહ જુઓ.",
+      step3_t: "હીરા કાર્ડ ખોલો અને તમારો હિસાબ શરૂ કરો!",
+      step3_d: "તમારી ભાષા પસંદ કરો, તમારું પહેલું કાર્ડ ઉમેરો, અને રોજની કમાણી ટ્રૅક કરવાનું શરૂ કરો.",
+      features_title: "મુખ્ય ફીચર્સ",
+      features_sub: "રોજનો હિસાબ સંભાળવા કારીગરને જે જોઈએ તે બધું",
+      f1_t: "રોજની કમાણી", f1_d: "કૅટેગરી અને જથ્થા પ્રમાણે એન્ટ્રી ઉમેરો. એપ તમારો કુલ આપમેળે ગણી લે છે.",
+      f2_t: "ઉપાડ (એડવાન્સ) ટ્રૅકિંગ", f2_d: "કાર્ડ સમયગાળામાં લીધેલો કોઈપણ ઉપાડ નોંધો. કપાત પછી તમારું સાચું બૅલેન્સ જુઓ.",
+      f3_t: "ખર્ચ", f3_d: "રોજનો ખર્ચ કૅટેગરી પ્રમાણે ટ્રૅક કરો — ચા, પાણી, નાસ્તો, જમવાનું અને બીજું ઘણું.",
+      f4_t: "કાર્ડ ઇતિહાસ", f4_d: "દરેક બંધ કરેલું કાર્ડ સેવ થાય છે. તમારી જૂની કમાણી ગમે ત્યારે જુઓ.",
+      f5_t: "WhatsApp પર શૅર કરો", f5_d: "તમારું આખું કાર્ડ એક ટૅપમાં PDF તરીકે મુનીમ કે પરિવારને મોકલો.",
+      f6_t: "માસિક એનાલિટિક્સ", f6_d: "છેલ્લા 6 મહિનાની કમાણી અને ખર્ચના ચાર્ટ જુઓ.",
+      f7_t: "તમારી કૅટેગરી", f7_d: "પ્રતિ પીસ તમારા દર સાથે તમારી પોતાની ઘસાઈ કૅટેગરી ઉમેરો.",
+      f8_t: "3 ભાષાઓ", f8_d: "હીરા કાર્ડ ગુજરાતી, हिंदी કે English માં વાપરો — જે તમને ફાવે તે.",
+      f9_t: "પ્રાઇવસી પહેલા", f9_d: "તમારો બધો ડેટા ફક્ત તમારા ફોનમાં જ રહે છે. કોઈ સર્વર પર કંઈ અપલોડ થતું નથી.",
+      adfree_title: "આજે જ જાહેરાત-મુક્ત બનો — મફત",
+      adfree_body: "એક ટૂંકો વીડિયો જુઓ અને હીરા કાર્ડ <strong>આખા દિવસ માટે સંપૂર્ણ જાહેરાત-મુક્ત</strong> વાપરો — તદ્દન મફત, કોઈ ચૂકવણી નહીં!",
+      worksfor_title: "કોના માટે છે",
+      worksfor_sub: "હીરા ઘસાઈના કામ સાથે જોડાયેલા દરેક માટે બનાવેલ",
+      wf1: "હીરા ઘસનાર કારીગરો",
+      wf2: "મુનીમ / કોન્ટ્રાક્ટર જે કારીગરોને સંભાળે છે",
+      wf3: "જેને પણ સરળ કાર્ડ-આધારિત કમાણી ટ્રૅકર જોઈએ છે",
+      whatsnew_title: "નવું શું છે",
+      whatsnew_sub: "નવા બિલ્ડમાં તાજા સુધારા",
+      wn1: "ટૅપ કરવાથી હૅમબર્ગર મેનુ ન ખુલવાની સમસ્યા સુધારી",
+      wn2: "પહેલીવાર એપ ખોલવા પર નીચેના મેનુ આઇકન ન દેખાવાની સમસ્યા સુધારી",
+      wn3: "Gift &amp; Play બટન હવે લોડિંગ સ્ક્રીન બતાવે છે અને રિવૉર્ડ જાહેરાત તૈયાર થાય ત્યાં સુધી આપમેળે ફરી પ્રયાસ કરે છે",
+      wn4: "કાર્ડ શૅર બટનનું લેબલ અપડેટ કર્યું",
+      wn5: "સેટિંગ્સમાં અનઇન્સ્ટોલ પર ડેટા ગુમ થવાની ચેતવણી ઉમેરી",
+      about_title: "અમારા વિશે",
+      about_sub: "MonajiInfoTech દ્વારા પ્રેમથી બનાવેલ",
+      about_body: "હીરા કાર્ડ <strong>MonajiInfoTech</strong> દ્વારા વિકસાવાયું છે. અમારો ધ્યેય છે દરેક હીરા ઘસનાર કારીગરને તેમનો રોજનો હિસાબ — કમાણી, ઉપાડ અને ખર્ચ — સરળ અને ભરોસાપાત્ર રીતે તેમના ખિસ્સામાં રાખવાનો માર્ગ આપવો. કાગળ નહીં, કેલ્ક્યુલેટર નહીં, હિસાબ વખતે કોઈ ગૂંચવણ નહીં. હીરા કાર્ડ ડાઉનલોડ કરો — દરેક કારીગર માટે ડિજિટલ હિસાબ બુક.",
+      footer_privacy: "પ્રાઇવસી પૉલિસી"
+    }
+  };
+
+  function setLang(lang) {
+    const dict = translations[lang] || translations.en;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (dict[key] !== undefined) el.innerHTML = dict[key];
+    });
+    document.documentElement.lang = lang;
+    document.querySelectorAll('#langSwitch button').forEach(b =>
+      b.classList.toggle('active', b.getAttribute('data-lang') === lang));
+    try { localStorage.setItem('hira_lang', lang); } catch (e) {}
+  }
+
+  document.querySelectorAll('#langSwitch button').forEach(btn =>
+    btn.addEventListener('click', () => setLang(btn.getAttribute('data-lang'))));
+
+  let saved = 'gu';
+  try { saved = localStorage.getItem('hira_lang') || 'gu'; } catch (e) {}
+  setLang(saved);
+</script>
+</body>
+</html>
